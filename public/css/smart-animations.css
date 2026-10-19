@@ -1,0 +1,258 @@
+:root {
+    --smart-ease: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* =====================================================
+   MUNCUL SAAT DI-SCROLL
+   (hanya aktif jika kelas .js-anim terpasang)
+   ===================================================== */
+.js-anim .smart-reveal:not(.is-visible) {
+    opacity: 0;
+}
+
+.js-anim .smart-reveal.is-visible {
+    animation: smartRevealIn 0.8s var(--smart-ease) backwards;
+}
+
+.js-anim .smart-reveal.smart-delay-1.is-visible { animation-delay: 80ms; }
+.js-anim .smart-reveal.smart-delay-2.is-visible { animation-delay: 160ms; }
+.js-anim .smart-reveal.smart-delay-3.is-visible { animation-delay: 240ms; }
+.js-anim .smart-reveal.smart-delay-4.is-visible { animation-delay: 320ms; }
+
+@keyframes smartRevealIn {
+    from { opacity: 0; transform: translateY(28px); }
+    to   { opacity: 1; transform: none; }
+}
+
+/* =====================================================
+   HERO BERANDA
+   ===================================================== */
+
+/* Teks gradasi mengalir */
+.js-anim .gradient-text {
+    background-image: linear-gradient(100deg, #2563eb, #06b6d4, #2563eb);
+    background-size: 200% auto;
+    animation: smartGradientFlow 7s linear infinite;
+}
+
+@keyframes smartGradientFlow {
+    from { background-position: 0% center; }
+    to   { background-position: 200% center; }
+}
+
+/* Titik denyut pada badge */
+.js-anim .eyebrow .pulse {
+    position: relative;
+}
+
+.js-anim .eyebrow .pulse::after {
+    position: absolute;
+    inset: 0;
+    background: #3b82f6;
+    border-radius: 50%;
+    content: "";
+    animation: smartPulseRing 2.2s ease-out infinite;
+}
+
+@keyframes smartPulseRing {
+    0%   { transform: scale(1);   opacity: 0.7; }
+    100% { transform: scale(3.2); opacity: 0; }
+}
+
+/* Kartu visual dan catatan melayang (memakai properti "translate"
+   agar tidak bentrok dengan transform bawaan) */
+.js-anim section.hero .visual-card {
+    animation: smartFloat 6s ease-in-out 1.2s infinite;
+}
+
+.js-anim section.hero .floating-note {
+    animation: smartFloatSoft 5s ease-in-out 1.4s infinite;
+}
+
+@keyframes smartFloat {
+    0%, 100% { translate: 0 0; }
+    50%      { translate: 0 -12px; }
+}
+
+@keyframes smartFloatSoft {
+    0%, 100% { translate: 0 0; }
+    50%      { translate: 0 9px; }
+}
+
+/* Progress bar tumbuh dari kiri */
+.js-anim section.hero .progress-bar {
+    transform-origin: left;
+    animation: smartBarGrow 1.6s var(--smart-ease) 0.9s backwards;
+}
+
+@keyframes smartBarGrow {
+    from { transform: scaleX(0); }
+    to   { transform: scaleX(1); }
+}
+
+/* Lingkaran dekoratif: parallax + bernapas */
+.js-anim section.hero::before {
+    translate: 0 var(--py, 0px);
+    animation: smartRingBreath 9s ease-in-out infinite;
+}
+
+.js-anim section.hero::after {
+    translate: 0 calc(var(--py, 0px) * -0.6);
+    animation: smartRingBreath 11s ease-in-out 1s infinite;
+}
+
+@keyframes smartRingBreath {
+    0%, 100% { scale: 1; }
+    50%      { scale: 1.07; }
+}
+
+/* =====================================================
+   KARTU BERANDA: CAHAYA MENGIKUTI KURSOR
+   ===================================================== */
+.home-service-card::before,
+.home-article-card::before {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(
+        320px circle at var(--mx, 50%) var(--my, 50%),
+        rgba(59, 130, 246, 0.1),
+        transparent 60%
+    );
+    border-radius: inherit;
+    content: "";
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.home-service-card:hover::before,
+.home-article-card:hover::before {
+    opacity: 1;
+}
+
+/* =====================================================
+   TOMBOL
+   ===================================================== */
+.btn:active {
+    transform: scale(0.98);
+}
+
+/* Kilau menyapu saat di-hover */
+section.hero .btn,
+section.cta-band .btn-light {
+    position: relative;
+    overflow: hidden;
+}
+
+section.hero .btn::after,
+section.cta-band .btn-light::after {
+    position: absolute;
+    top: 0;
+    left: -80%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(100deg, transparent, rgba(255, 255, 255, 0.55), transparent);
+    content: "";
+    transform: skewX(-20deg);
+    pointer-events: none;
+}
+
+section.hero .btn:hover::after,
+section.cta-band .btn-light:hover::after {
+    left: 140%;
+    transition: left 0.75s ease;
+}
+
+/* =====================================================
+   BAR PROGRES SCROLL
+   ===================================================== */
+.smart-scroll-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 3000;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, #2563eb, #06b6d4);
+    transform: scaleX(0);
+    transform-origin: left;
+    pointer-events: none;
+}
+
+/* =====================================================
+   NOTIFIKASI
+   ===================================================== */
+.alert {
+    animation: smartNotificationEnter 0.35s ease-out both;
+}
+
+@keyframes smartNotificationEnter {
+    from { opacity: 0; transform: translateY(-8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =====================================================
+   KURANGI GERAKAN
+   ===================================================== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .smart-reveal {
+        opacity: 1 !important;
+        transform: none !important;
+    }
+
+    .smart-scroll-progress {
+        display: none;
+    }
+}
+
+/* =====================================================
+   ANIMASI JUDUL (kata naik satu per satu)
+   ===================================================== */
+.js-anim .smart-split .smart-word {
+    display: inline-block;
+    padding: 0.1em 0 0.16em;
+    margin: -0.1em 0 -0.16em;
+    overflow: hidden;
+    vertical-align: top;
+}
+
+.js-anim .smart-split .smart-word-inner {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(115%) rotate(4deg);
+    transform-origin: left bottom;
+    transition:
+        transform 0.9s var(--smart-ease),
+        opacity 0.6s ease;
+    transition-delay: calc(var(--w, 0) * 70ms + 120ms);
+}
+
+.js-anim .smart-split.smart-title-in .smart-word-inner {
+    opacity: 1;
+    transform: none;
+}
+
+/* Kata bergradasi: gradasi dipindah ke tiap kata agar tetap terlihat */
+.js-anim .smart-split [class*="gradient-text"] {
+    background: none !important;
+    animation: none !important;
+}
+
+.js-anim .smart-split [class*="gradient-text"] .smart-word-inner {
+    color: transparent;
+    background-image: linear-gradient(100deg, #2563eb, #06b6d4, #2563eb);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: smartGradientFlow 7s linear infinite;
+}

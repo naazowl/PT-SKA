@@ -1,0 +1,177 @@
+
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+
+@theme {
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
+        'Segoe UI Symbol', 'Noto Color Emoji';
+}
+
+/* =========================================
+   GAMBAR PRODUK DAN LAYANAN
+========================================= */
+
+.service-image {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    border-radius: 14px;
+    background: #f3f5f8;
+}
+
+.service-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* =========================================
+   GAMBAR DETAIL LAYANAN
+========================================= */
+
+.product-detail-image {
+    width: 100%;
+    max-height: 480px;
+    overflow: hidden;
+    border-radius: 18px;
+    background: #f3f5f8;
+}
+
+.product-detail-image img {
+    display: block;
+    width: 100%;
+    max-height: 480px;
+    object-fit: cover;
+}
+
+/* =========================================
+   GAMBAR ARTIKEL
+========================================= */
+
+.article-image {
+    width: 100%;
+    height: 220px;
+    overflow: hidden;
+    background: #f3f5f8;
+}
+
+.article-image img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* =========================================
+   LINK PELAJARI LAYANAN PADA CARD
+========================================= */
+
+.products-card .products-card-link {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: flex-start !important;
+    align-self: flex-start;
+    gap: 6px;
+    width: fit-content !important;
+    max-width: 100%;
+    padding: 16px 0 0 !important;
+    margin: auto 0 0 !important;
+    border: 0 !important;
+    border-top: 1px solid #edf2f8 !important;
+    border-radius: 0 !important;
+    outline: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #2563eb;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.5;
+    text-decoration: none;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+/* Teks link */
+
+.products-card .products-card-link span {
+    display: inline;
+    width: auto;
+    height: auto;
+    padding: 0;
+    margin: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    color: inherit;
+}
+
+/* Panah menggunakan teks biasa, bukan ikon berbentuk kotak */
+
+.products-card .products-card-link i {
+    display: none !important;
+}
+
+/* Hilangkan dekorasi tambahan */
+
+.products-card .products-card-link::before,
+.products-card .products-card-link::after {
+    content: none !important;
+    display: none !important;
+}
+
+/* Efek hover */
+
+.products-card .products-card-link:hover {
+    color: #1d4ed8;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-decoration: none;
+}
+
+/* =========================================
+   KOMPATIBILITAS CARD SERVICE
+========================================= */
+
+.service-card a.products-card-link {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: flex-start !important;
+    gap: 6px;
+    width: fit-content !important;
+    padding: 16px 0 0 !important;
+    margin: auto 0 0 !important;
+    border: 0 !important;
+    border-top: 1px solid #edf2f8 !important;
+    border-radius: 0 !important;
+    outline: none !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #2563eb;
+    font-size: 14px;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.service-card a.products-card-link i {
+    display: none !important;
+}
+
+.service-card a.products-card-link::before,
+.service-card a.products-card-link::after {
+    content: none !important;
+    display: none !important;
+}
+
+.service-card a.products-card-link:hover {
+    color: #1d4ed8;
+    background: transparent !important;
+    box-shadow: none !important;
+    text-decoration: none;
+}
+
