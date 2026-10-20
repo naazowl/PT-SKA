@@ -72,10 +72,14 @@
             <div class="msg-detail-text">{{ $item->message }}</div>
 
             <div class="msg-detail-actions">
-                <a class="msg-btn-main"
-                   href="mailto:{{ $item->email }}?subject={{ rawurlencode('Re: ' . $item->subject) }}">
-                    Balas via email
-                </a>
+               
+                        <a class="msg-btn-main"
+                           href="https://mail.google.com/mail/?view=cm&fs=1&to={{ rawurlencode($item->email) }}&su={{ rawurlencode('Re: ' . $item->subject) }}"
+                           target="_blank"
+                           rel="noopener noreferrer">
+                            <i class="bi bi-envelope me-1"></i>
+                            Balas via email
+                        </a>
 
                 <form method="POST" action="{{ route('admin.pesan.toggle', $item) }}">
                     @csrf

@@ -687,7 +687,9 @@
                             <h3>Email</h3>
 
                             @if ($company->email)
-                                <a href="mailto:{{ $company->email }}">
+                                <a href="https://mail.google.com/mail/?view=cm&fs=1&to={{ rawurlencode($company->email) }}"
+                                target="_blank"
+                                rel="noopener noreferrer">
                                     {{ $company->email }}
                                 </a>
                             @else

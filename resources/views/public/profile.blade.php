@@ -85,7 +85,7 @@
 
     $missionText = trim((string) $company->mission);
 
-    $missionItems = preg_split('/\r\n|\r|\n/', $missionText);
+    $missionItems = preg_split('/\r\n|\r|\n|(?<=[.!?])\s+/', $missionText);
     $missionItems = array_values(array_filter(
         array_map('trim', $missionItems),
         fn ($item) => $item !== ''
