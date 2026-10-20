@@ -24,9 +24,7 @@ class CompanyProfileController extends Controller
                 'vision' => 'Menjadi mitra teknologi terpercaya untuk pertumbuhan bisnis.',
                 'mission' => "Menghadirkan solusi yang tepat guna.\nMembangun kemitraan jangka panjang.\nMengutamakan kualitas dan inovasi.",
 
-                'profile_hero_title' => 'Mitra Digital untuk Pertumbuhan Bisnis',
                 'profile_hero_highlight' => 'Teknologi yang Berdampak',
-                'profile_hero_description' => 'Kami membantu bisnis berkembang melalui solusi teknologi yang tepat, inovatif, dan berkelanjutan.',
 
                 'profile_point_1_title' => 'Solusi Terintegrasi',
                 'profile_point_1_description' => 'Menghubungkan kebutuhan bisnis dengan solusi digital yang saling mendukung.',
@@ -74,9 +72,7 @@ class CompanyProfileController extends Controller
             'vision' => ['required', 'string'],
             'mission' => ['required', 'string'],
 
-            'profile_hero_title' => ['nullable', 'string', 'max:255'],
             'profile_hero_highlight' => ['nullable', 'string', 'max:255'],
-            'profile_hero_description' => ['nullable', 'string'],
         ];
 
         // Validasi tiga keunggulan perusahaan.

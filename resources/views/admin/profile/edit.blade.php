@@ -142,18 +142,6 @@
 
         <div class="row g-4">
             <div class="col-12">
-                <label class="form-label">Judul utama profil</label>
-                <input type="text"
-                       class="form-control"
-                       name="profile_hero_title"
-                       value="{{ old('profile_hero_title', $item->profile_hero_title ?? 'PT Solusi Koneksi Anda') }}"
-                       placeholder="PT Solusi Koneksi Anda">
-                @error('profile_hero_title')
-                    <div class="text-danger small mt-1">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="col-12">
                 <label class="form-label">Kalimat sorotan</label>
                 <input type="text"
                        class="form-control"
@@ -161,17 +149,6 @@
                        value="{{ old('profile_hero_highlight', $item->profile_hero_highlight ?? 'Menghubungkan Ide, Mendorong Kemajuan.') }}"
                        placeholder="Menghubungkan Ide, Mendorong Kemajuan.">
                 @error('profile_hero_highlight')
-                    <div class="text-danger small mt-1">{{ $message }}</div>
-                @enderror
-            </div>
-
-            <div class="col-12">
-                <label class="form-label">Deskripsi singkat hero</label>
-                <textarea class="form-control"
-                          name="profile_hero_description"
-                          rows="3"
-                          placeholder="Deskripsi singkat perusahaan di bagian atas profil.">{{ old('profile_hero_description', $item->profile_hero_description ?? '') }}</textarea>
-                @error('profile_hero_description')
                     <div class="text-danger small mt-1">{{ $message }}</div>
                 @enderror
             </div>

@@ -6,10 +6,7 @@
 @section('content')
 
 <style>
-    /* =====================================================
-       ANIMASI DASHBOARD ADMIN
-       (berdiri sendiri, tidak bergantung pada file JS lain)
-       ===================================================== */
+    
     @keyframes dash-up {
         from { opacity: 0; transform: translateY(22px); }
         to   { opacity: 1; transform: none; }

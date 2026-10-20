@@ -5,12 +5,33 @@
 @section('content')
 
 @php
-    $companyName = 'PT Solusi Koneksi Anda';
+    /*
+     * [DIUBAH] Nama perusahaan sekarang dibaca dari database.
+     * Teks lama 'PT Solusi Koneksi Anda' tetap ada sebagai cadangan
+     * jika kolom di database kosong.
+     * Jika nama kolom di tabel Anda berbeda, tambahkan di deretan ?? di bawah.
+     */
+    $companyName = $company->name
+        ?? $company->company_name
+        ?? 'PT Solusi Koneksi Anda';
+    $companyName = trim((string) $companyName) !== '' ? $companyName : 'PT Solusi Koneksi Anda';
 
-    // Ambil teks sorotan, buang "Mendorong Kemajuan" bila ikut tersimpan di database agar tidak dobel
     $rawHighlight = $company->profile_hero_highlight ?: 'Menghubungkan Ide,';
     $heroHighlight = trim(str_ireplace('Mendorong Kemajuan', '', $rawHighlight), " \t\n\r.,");
     $heroHighlight = ($heroHighlight !== '' ? $heroHighlight : 'Menghubungkan Ide') . ',';
+
+    /*
+     * [BARU] Kalimat sorotan dipecah di koma pertama:
+     * bagian depan = baris biru muda, bagian belakang = baris putih.
+     * Jika bagian belakang kosong, dipakai teks cadangan 'Mendorong Kemajuan.'
+     */
+    $heroParts = preg_split('/,\s*/u', trim((string) $rawHighlight), 2);
+    $heroFirst = trim($heroParts[0] ?? '', " \t\n\r.,");
+    if ($heroFirst !== '') {
+        $heroHighlight = $heroFirst . ',';
+    }
+    $heroSecond = trim($heroParts[1] ?? '');
+    $heroSecond = $heroSecond !== '' ? $heroSecond : 'Mendorong Kemajuan.';
 
     $heroDescription = $company->profile_hero_description
         ?: ($company->tagline
@@ -83,11 +104,25 @@
     $visionText = $company->vision
         ?: 'Menjadi perusahaan yang dipercaya dalam menghadirkan solusi konektivitas dan teknologi yang relevan, berkualitas, serta memberikan nilai tambah bagi pelanggan dan mitra.';
 
+    /*
+     * Misi dipisahkan berdasarkan baris baru atau nomor/bullet.
+     * Jika database menyimpan misi dalam satu paragraf, kalimat
+     * yang diakhiri tanda baca juga akan ditampilkan sebagai item.
+     */
     $missionText = trim((string) $company->mission);
 
-    $missionItems = preg_split('/\r\n|\r|\n|(?<=[.!?])\s+/', $missionText);
+    $missionText = preg_replace(
+        '/(?<!^)\s+(?=(?:\d+[.)]\s+|[-•]\s+))/u',
+        "\n",
+        $missionText
+    );
+
+    $missionItems = preg_split('/\r\n|\r|\n|(?<=[.!?])\s+/u', $missionText);
+
     $missionItems = array_values(array_filter(
-        array_map('trim', $missionItems),
+        array_map(function ($item) {
+            return trim(preg_replace('/^(?:\d+[.)]\s*|[-•]\s*)/u', '', $item));
+        }, $missionItems),
         fn ($item) => $item !== ''
     ));
 
@@ -116,26 +151,42 @@
         color: var(--p-text);
     }
 
-    /* ===== Hero ===== */
+    /* ===== HERO DENGAN FOTO GEDUNG ===== */
     .profile-page .profile-hero {
         position: relative;
+        isolation: isolate;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 590px;
+        padding: 100px 0 105px;
         overflow: hidden;
-        padding: 70px 0 80px;
         text-align: center;
-        background:
-            radial-gradient(ellipse at 90% 10%, rgba(96, 165, 250, .18), transparent 35%),
-            linear-gradient(145deg, #f8fbff 0%, #eff6ff 55%, #fff 100%);
+        background-color: #14213d;
+        background-image:
+            linear-gradient(
+                90deg,
+                rgba(8, 20, 38, .78) 0%,
+                rgba(8, 20, 38, .58) 48%,
+                rgba(8, 20, 38, .28) 100%
+            ),
+            url('{{ asset('images/profile-hero.png') }}');
+        background-position: center 52%;
+        background-size: cover;
+        background-repeat: no-repeat;
         border-bottom: 1px solid #eaf0f8;
     }
 
     .profile-page .profile-hero::before {
         position: absolute;
-        top: -170px;
-        right: -120px;
-        width: 420px;
-        height: 420px;
-        border: 1px solid rgba(37, 99, 235, .12);
-        border-radius: 50%;
+        z-index: -1;
+        inset: 0;
+        background: linear-gradient(
+            0deg,
+            rgba(8, 20, 38, .35),
+            transparent 45%,
+            rgba(8, 20, 38, .12)
+        );
         content: "";
         pointer-events: none;
     }
@@ -149,14 +200,16 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        padding: 8px 13px;
-        color: var(--p-blue-dark);
-        background: #fff;
-        border: 1px solid #dbeafe;
+        padding: 9px 15px;
+        color: #fff;
+        background: rgba(15, 23, 42, .38);
+        border: 1px solid rgba(255, 255, 255, .42);
         border-radius: 999px;
         font-size: 11px;
         font-weight: 800;
         letter-spacing: .8px;
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
     }
 
     .profile-page .profile-eyebrow i {
@@ -164,32 +217,34 @@
     }
 
     .profile-page .profile-hero h1 {
-        max-width: 760px;
-        margin: 20px auto 0;
-        color: #0f172a;
-        font-size: clamp(1.7rem, 3.4vw, 2.6rem);
-        font-weight: 800;
-        line-height: 1.25;
-        letter-spacing: -.8px;
+        max-width: 850px;
+        margin: 24px auto 0;
+        color: #fff;
+        font-size: clamp(2.2rem, 5vw, 4.2rem);
+        font-weight: 850;
+        line-height: 1.15;
+        letter-spacing: -1.5px;
+        text-shadow: 0 3px 24px rgba(0, 0, 0, .3);
         overflow-wrap: anywhere;
     }
 
     .profile-page .hero-highlight {
         display: block;
-        color: var(--p-blue);
+        color: #93c5fd;
     }
 
     .profile-page .hero-dark {
         display: block;
-        color: #0f172a;
+        color: #fff;
     }
 
     .profile-page .hero-description {
-        max-width: 640px;
-        margin: 16px auto 0;
-        color: var(--p-muted);
+        max-width: 680px;
+        margin: 20px auto 0;
+        color: rgba(255, 255, 255, .92);
         font-size: 15px;
-        line-height: 1.8;
+        line-height: 1.9;
+        text-shadow: 0 2px 12px rgba(0, 0, 0, .3);
         overflow-wrap: anywhere;
     }
 
@@ -198,10 +253,9 @@
         flex-wrap: wrap;
         justify-content: center;
         gap: 12px;
-        margin-top: 28px;
+        margin-top: 30px;
     }
 
-    /* Tombol bulat (pill) */
     .profile-page .btn-profile-primary,
     .profile-page .btn-profile-outline {
         position: relative;
@@ -209,7 +263,7 @@
         align-items: center;
         justify-content: center;
         gap: 10px;
-        padding: 13px 26px;
+        padding: 14px 26px;
         overflow: hidden;
         border-radius: 999px;
         font-size: 12px;
@@ -222,7 +276,7 @@
         color: #fff;
         background: var(--p-blue);
         border: 1px solid var(--p-blue);
-        box-shadow: 0 10px 24px rgba(37, 99, 235, .22);
+        box-shadow: 0 10px 24px rgba(37, 99, 235, .3);
     }
 
     .profile-page .btn-profile-primary:hover {
@@ -232,18 +286,20 @@
     }
 
     .profile-page .btn-profile-outline {
-        color: #475569;
-        background: rgba(255, 255, 255, .85);
-        border: 1px solid var(--p-border);
+        color: #fff;
+        background: rgba(255, 255, 255, .12);
+        border: 1px solid rgba(255, 255, 255, .65);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
     }
 
     .profile-page .btn-profile-outline:hover {
-        color: var(--p-blue);
-        border-color: #bfdbfe;
+        color: #14213d;
+        background: #fff;
+        border-color: #fff;
         transform: translateY(-2px);
     }
 
-    /* Kilau menyapu pada tombol hero */
     .profile-page .btn-profile-primary::after,
     .profile-page .btn-profile-outline::after {
         position: absolute;
@@ -251,7 +307,7 @@
         left: -80%;
         width: 50%;
         height: 100%;
-        background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .55), transparent);
+        background: linear-gradient(100deg, transparent, rgba(255, 255, 255, .45), transparent);
         content: "";
         transform: skewX(-20deg);
         pointer-events: none;
@@ -267,17 +323,17 @@
         display: inline-flex;
         align-items: center;
         gap: 8px;
-        margin-top: 24px;
-        color: var(--p-muted);
+        margin-top: 26px;
+        color: rgba(255, 255, 255, .9);
         font-size: 12.5px;
         font-weight: 600;
     }
 
     .profile-page .hero-note i {
-        color: #16a34a;
+        color: #86efac;
     }
 
-    /* ===== Umum ===== */
+    /* ===== UMUM ===== */
     .profile-page .profile-section {
         padding: 80px 0;
     }
@@ -315,7 +371,7 @@
         overflow-wrap: anywhere;
     }
 
-    /* ===== Tentang ===== */
+    /* ===== TENTANG PERUSAHAAN ===== */
     .profile-page .about-visual {
         position: relative;
         display: flex;
@@ -345,7 +401,6 @@
         pointer-events: none;
     }
 
-    /* Logo perusahaan (latar transparan, tanpa kartu) */
     .profile-page .visual-logo {
         position: absolute;
         top: 40%;
@@ -371,7 +426,6 @@
         filter: drop-shadow(0 14px 22px rgba(30, 64, 175, .2));
     }
 
-    /* Logo melayang pelan (memakai properti "translate" agar tidak bentrok dengan transform di atas) */
     .js-anim .profile-page .visual-logo {
         animation: smartFloat 6s ease-in-out infinite;
     }
@@ -463,7 +517,7 @@
         line-height: 1.75;
     }
 
-    /* ===== Nilai ===== */
+    /* ===== NILAI PERUSAHAAN ===== */
     .profile-page .values-section {
         padding: 80px 0 85px;
         background:
@@ -522,7 +576,7 @@
         line-height: 1.8;
     }
 
-    /* ===== Visi & Misi ===== */
+    /* ===== VISI DAN MISI ===== */
     .profile-page .vision-mission-section {
         padding: 85px 0;
         background: #fff;
@@ -629,7 +683,7 @@
         font-weight: 800;
     }
 
-    /* ===== Komitmen ===== */
+    /* ===== KOMITMEN ===== */
     .profile-page .commitment-section {
         padding: 80px 0;
         background:
@@ -767,15 +821,17 @@
         transition: left .75s ease;
     }
 
-    /* ===== Responsive ===== */
+    /* ===== RESPONSIVE ===== */
     @media (max-width: 767.98px) {
         .profile-page .profile-hero {
-            padding: 50px 0 55px;
+            min-height: 510px;
+            padding: 70px 0;
+            background-position: 58% center;
         }
 
         .profile-page .profile-hero h1 {
-            font-size: 1.6rem;
-            letter-spacing: -.4px;
+            font-size: clamp(2rem, 8vw, 2.8rem);
+            letter-spacing: -.7px;
         }
 
         .profile-page .hero-description {
@@ -847,7 +903,7 @@
 
             <h1>
                 <span class="hero-highlight">{{ $heroHighlight }}</span>
-                <span class="hero-dark">Mendorong Kemajuan.</span>
+                <span class="hero-dark">{{ $heroSecond }}</span>
             </h1>
 
             <p class="hero-description smart-reveal smart-delay-2">
@@ -970,7 +1026,6 @@
                     <div class="vision-card vision smart-reveal">
                         <span class="vision-tag">ARAH KAMI</span>
                         <h3>Visi Perusahaan</h3>
-
                         <p>{{ $visionText }}</p>
                     </div>
                 </div>

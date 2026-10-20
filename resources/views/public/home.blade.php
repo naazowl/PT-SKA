@@ -511,7 +511,7 @@
         border: 1px dashed #cbd5e1;
         border-radius: 20px;
     }
-
+    
     .home-empty-state .empty-icon {
         display: inline-flex;
         align-items: center;
